@@ -41,9 +41,8 @@
       defaultSystem = "aarch64-linux";
 
       overlays = [
-        nixgl.overlay
-        nix-index-database.overlay
-        nixpkgs-wayland.overlay
+        nixgl.overlays.default
+        nixpkgs-wayland.overlays.default
       ];
 
       forAllSystems = f:

@@ -103,7 +103,7 @@ in
       Restart = "always";
       RestartSec = 1;
       Environment = [
-        "BROWSER=${lib.getExe' cros-container-guest-tools \"garcon-url-handler\"}"
+        "BROWSER=${lib.getExe' cros-container-guest-tools "garcon-url-handler"}"
         "NCURSES_NO_UTF8_ACS=1"
         "QT_AUTO_SCREEN_SCALE_FACTOR=1"
         "QT_QPA_PLATFORMTHEME=gtk2"

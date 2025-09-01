@@ -39,6 +39,7 @@
   environment.systemPackages = with pkgs; [
     git micro fish tailscale
     docker-compose docker-buildx docker-color-output docker-credential-gcr
+	nodejs
     nerd-fonts.jetbrains-mono
     xdg-utils            # xdg-open -> opens URLs/files via ChromeOS integration
     xdg-user-dirs        # creates Desktop/Downloads dirs etc.

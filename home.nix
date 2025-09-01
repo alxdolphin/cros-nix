@@ -42,8 +42,11 @@
     };
   };
 
-  # Deploy your repo's fish config (keep in repo root as config.fish)
-  home.file.".config/fish/config.fish".source = ./config.fish;
+  home.file.".config/fish/config.fish" = {
+    source = ./config.fish;
+    force = true;
+  };
+
 
   # Crostini: ensure garcon picks up Nix env
   xdg.enable = true;
@@ -61,31 +64,6 @@
   # ---- Fish shell (plugins, aliases, fzf integration) ----
   programs.fish = {
     enable = true;
-
-    # Use in-repo config via home.file above; add light bits here if you like
-    shellAliases = {
-      ga = "git add";
-      gc = "git commit";
-      gco = "git checkout";
-      gcp = "git cherry-pick";
-      gdiff = "git diff";
-      gl = "git prettylog";
-      gp = "git push";
-      gs = "git status";
-      gt = "git tag";
-      jf = "jj git fetch";
-      jn = "jj new";
-      js = "jj st";
-      pbcopy = "xclip -selection clipboard";
-      pbpaste = "xclip -selection clipboard -o";
-    };
-
-    # Prefer pkgs.fishPlugins over undefined `sources.*`
-    plugins = with pkgs.fishPlugins; [
-      { name = "fzf-fish";      src = fzf-fish.src; }
-      { name = "foreign-env";   src = foreign-env.src; }
-      { name = "bobthefish";    src = bobthefish.src; }
-    ];
   };
 
   programs.fzf = {
