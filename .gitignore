@@ -1,0 +1,12 @@
+# Nix build outputs
+result
+.result
+*.drv
+*.log
+
+# Nix shells
+.direnv/
+.envrc
+
+# Backup files
+*~
