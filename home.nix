@@ -42,10 +42,10 @@
     };
   };
 
-  home.file.".config/fish/config.fish" = {
-    source = ./config.fish;
-    force = true;
-  };
+  	file.".config/fish/config.fish" = {
+      source = ./config.fish;
+      force = true;
+  	};
 
 
   # Crostini: ensure garcon picks up Nix env
