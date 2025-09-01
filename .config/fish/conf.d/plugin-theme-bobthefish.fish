@@ -1,0 +1,1 @@
+/nix/store/1hmn11z2qp4920pp3kngnq3bpzpclgj1-home-manager-files/.config/fish/conf.d/plugin-theme-bobthefish.fish

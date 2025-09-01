@@ -49,9 +49,6 @@
         nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: f system);
     in
     {
-      ########################
-      ## Image build outputs ##
-      ########################
       packages = forAllSystems (system:
         let
           pkgs = import nixpkgs {
@@ -79,9 +76,6 @@
           };
         });
 
-      ###################################
-      ## NixOS system (inside container) ##
-      ###################################
       nixosConfigurations.seagull = nixpkgs.lib.nixosSystem {
         system = defaultSystem;
         inherit specialArgs;
@@ -106,9 +100,6 @@
         ];
       };
 
-      ##################################
-      ## Standalone Home Manager usage ##
-      ##################################
       homeConfigurations."chronos" = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           system = defaultSystem;
@@ -118,17 +109,11 @@
         modules = [ ./home.nix ];
       };
 
-      ################
-      ## NixOS module ##
-      ################
       nixosModules = rec {
         nixos-crostini = ./crostini.nix;
         default = nixos-crostini;
       };
 
-      ################
-      ## Flake template (optional) ##
-      ################
       templates.default = {
         path = self;
         description = "NixOS+HM Crostini with nixGL and generators";
