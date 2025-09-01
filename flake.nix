@@ -106,7 +106,12 @@
           overlays = overlays;
           config.allowUnfree = true;
         };
-        modules = [ ./home.nix ];
+        modules = [ 
+
+        ./home.nix
+#		./sources.nix
+		
+        ];
       };
 
       nixosModules = rec {
