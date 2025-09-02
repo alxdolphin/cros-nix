@@ -26,7 +26,7 @@
     isNormalUser = true;
     home = "/home/chronos";
     shell = pkgs.fish;
-    extraGroups = [ "wheel" "docker" "video" ];
+    extraGroups = [ "wheel" "docker" "video" "render" ];
     openssh.authorizedKeys.keys = [
     ];
   };
@@ -52,6 +52,8 @@
   ];
 
   hardware.graphics.enable = true;   # unified switch (NixOS ≥ 24.11)
+  hardware.opengl.enable = true;
+
 
   # Don’t start a full X server; ChromeOS/sommelier handles display forwarding.
   services.xserver.enable = lib.mkDefault false;
@@ -80,6 +82,7 @@
   environment.variables = {
     PATH = "/home/chronos/.nix-profile/bin:/usr/local/sbin:/usr/local/bin:/usr/local/games:/usr/sbin:/usr/bin:/usr/games:/sbin:/bin";
     XDG_DATA_DIRS = "/home/chronos/.nix-profile/share:/home/chronos/.local/share:/home/chronos/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share";
+	DISPLAY=":0";
   };
 
   system.stateVersion = "25.05";
