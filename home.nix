@@ -9,20 +9,25 @@ in {
     stateVersion  = "25.05";
 
     packages = with pkgs; [
-      # GPU wrapper (works well in Crostini via virtGL)
-      nixgl.auto.nixGLDefault
-
-      # your originals / dev QoL
+      nixgl.nixGLMesa
       git gh
       direnv
+      niv
       fzf
       tree
       bat
       cachix
-      xclip
+      wl-clipboard xclip xsel
       micro
+      docker-compose docker-buildx docker-color-output docker-credential-gcr
       fd
       ripgrep
+	  tailscale
+      code-cursor
+      nerd-fonts.jetbrains-mono
+      xdg-utils xdg-user-dirs
+      mesa-demos
+      vulkan-tools
     ];
 
     # Add ~/.nix-profile/bin and ~/.local/bin to PATH
@@ -39,6 +44,22 @@ in {
       EDITOR = "micro";
     };
   };
+
+
+  hardware.graphics.enable = true;
+
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
+    autoPrune = {
+      enable = true;
+      dates = "weekly";
+    };
+  };
+
+
+  services.xserver.enable = lib.mkDefault false;
+  services.tailscale.enable = true;
 
   # Crostini: ensure garcon picks up Nix env
   xdg.enable = true;
@@ -87,8 +108,8 @@ in {
 		
       }
       (lib.mkIf pkgs.stdenv.isLinux {
-        pbcopy  = "xclip -selection clipboard";
-        pbpaste = "xclip -selection clipboard -o";
+        cbcp  = "wl-copy";
+        cbcp = "wl-paste";
       })
     ];
 
@@ -108,11 +129,18 @@ in {
   };
 
   programs.direnv = {
-    enable = true;           # Home Manager wires the fish hook automatically
+    enable = true;
     nix-direnv.enable = true;
   };
 
-  # Run an ssh-agent
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
+  };
   services.ssh-agent.enable = true;
 
   # Ensure ~/.ssh and ~/.gnupg exist with secure perms

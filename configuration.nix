@@ -1,6 +1,6 @@
 { inputs, lib, config, pkgs, ... }:
 {
-  networking.hostName = "seagull";
+  networking.hostName = "ciri-rev3-seagull";
 
   nix = {
     settings = {
@@ -10,8 +10,8 @@
     };
     gc = {
       automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
+      dates = "daily";
+      options = "--delete-older-than 1d";
     };
   };
 
@@ -33,14 +33,10 @@
 
   security.sudo = {
     enable = true;
-    wheelNeedsPassword = false;  # convenient in Crostini; tighten if you prefer
+    wheelNeedsPassword = false;
   };
 
   environment.systemPackages = with pkgs; [
-    git micro fish tailscale
-    docker-compose docker-buildx docker-color-output docker-credential-gcr
-	nodejs
-    nerd-fonts.jetbrains-mono
     xdg-utils            # xdg-open -> opens URLs/files via ChromeOS integration
     xdg-user-dirs        # creates Desktop/Downloads dirs etc.
     mesa-demos           # glxinfo, glxgears (quick GPU sanity checks)
@@ -52,8 +48,6 @@
   ];
 
   hardware.graphics.enable = true;   # unified switch (NixOS ≥ 24.11)
-  hardware.opengl.enable = true;
-
 
   # Don’t start a full X server; ChromeOS/sommelier handles display forwarding.
   services.xserver.enable = lib.mkDefault false;
