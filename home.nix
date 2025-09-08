@@ -1,111 +1,73 @@
 { config, pkgs, lib, ... }:
 
 let
-  sources = import /home/chronos/cros-nix/.config/nix/sources.nix;
-in
-{
+	sources = import /home/chronos/cros-nix/.config/nix/sources.nix;
+in {
   home = {
-    username = "chronos";
+    username      = "chronos";
     homeDirectory = "/home/chronos";
-    stateVersion = "25.05";
+    stateVersion  = "25.05";
 
     packages = with pkgs; [
       nixgl.auto.nixGLDefault
-      git
-      gh
+      git gh
       direnv
       niv
       fzf
       tree
       bat
       cachix
-      wl-clipboard
-      xclip
-      xsel
+      wl-clipboard xclip xsel
       micro
-      docker-compose
-      docker-buildx
-      docker-color-output
-      docker-credential-gcr
+      docker-compose docker-buildx docker-color-output docker-credential-gcr
       fd
       ripgrep
       tailscale
-      code-cursor
+      code-server
+      cursor-cli
       nerd-fonts.jetbrains-mono
-      xdg-utils
-      xdg-user-dirs
+      xdg-utils xdg-user-dirs
     ];
 
-    # Make sure our shims are found first
+    # Add ~/.nix-profile/bin and ~/.local/bin to PATH
     sessionPath = [
-      "$HOME/.local/bin"
       "$HOME/.nix-profile/bin"
+      "$HOME/.local/bin"
     ];
 
     # Keep ChromeOS garcon happy for GUI apps
+    # (Avoid shell expansions like :$XDG_DATA_DIRS to keep it stable.)
     sessionVariables = {
       XDG_DATA_DIRS =
         "$HOME/.nix-profile/share:$HOME/.local/share:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share";
       EDITOR = "micro";
-      BROWSER = "${config.home.homeDirectory}/.local/bin/garcon-url-handler";
     };
   };
+
 
   # Crostini: ensure garcon picks up Nix env
   xdg.enable = true;
-
-  # Tell ChromeOS (garcon) to open links from the container in the host browser
-  xdg.desktopEntries.garcon_host_browser = {
-    name = "Host Browser (ChromeOS)";
-    noDisplay = true;
-    exec = "${config.home.homeDirectory}/.local/bin/garcon-url-handler %u";
-    terminal = false;
-    type = "Application";
-    mimeType = [
-      "text/html"
-      "x-scheme-handler/http"
-      "x-scheme-handler/https"
-      "x-scheme-handler/about"
-      "x-scheme-handler/unknown"
-      "x-scheme-handler/cursor"
-    ];
-  };
-
-  # Make the garcon browser handler the default for URLs/HTML
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "text/html" = [ "garcon_host_browser.desktop" ];
-      "x-scheme-handler/http" = [ "garcon_host_browser.desktop" ];
-      "x-scheme-handler/https" = [ "garcon_host_browser.desktop" ];
-      "x-scheme-handler/about" = [ "garcon_host_browser.desktop" ];
-      "x-scheme-handler/unknown" = [ "garcon_host_browser.desktop" ];
-      "x-scheme-handler/cursor" = [ "garcon_host_browser.desktop" ];
-    };
-  };
-
-  # Keep ChromeOS garcon aware of your Nix paths + set BROWSER to garcon handler
   xdg.configFile."systemd/user/cros-garcon.service.d/override.conf".text = ''
     [Service]
-    Environment=PATH=%h/.local/bin:%h/.nix-profile/bin:/usr/local/sbin:/usr/local/bin:/usr/local/games:/usr/sbin:/usr/bin:/usr/games:/sbin:/bin
+    Environment=PATH=%h/.nix-profile/bin:/usr/local/sbin:/usr/local/bin:/usr/local/games:/usr/sbin:/usr/bin:/usr/games:/sbin:/bin
     Environment=XDG_DATA_DIRS=%h/.nix-profile/share:%h/.local/share:%h/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
-    Environment=BROWSER=%h/.local/bin/garcon-url-handler
   '';
-  
+
   # Start/refresh user services on switch
   systemd.user.startServices = "sd-switch";
 
   # ---- Fish shell (plugins, aliases, fzf integration) ----
   programs.fish = {
     enable = true;
-    interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" [
-      "source ${sources.theme-bobthefish}/functions/fish_prompt.fish"
-      "source ${sources.theme-bobthefish}/functions/fish_right_prompt.fish"
-      "source ${sources.theme-bobthefish}/functions/fish_title.fish"
-      (builtins.readFile ./config.fish)
-      "set -g SHELL ${pkgs.fish}/bin/fish"
-    ]);
-
+	interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" ([
+	  "source ${sources.theme-bobthefish}/functions/fish_prompt.fish"
+	  "source ${sources.theme-bobthefish}/functions/fish_right_prompt.fish"
+	  "source ${sources.theme-bobthefish}/functions/fish_title.fish"
+	  (builtins.readFile ./config.fish)
+	  "set -g SHELL ${pkgs.fish}/bin/fish"
+	]));
+      
+    # Aliases (from your config.fish, plus fnix)
     shellAliases = lib.mkMerge [
       {
         ga = "git add";
@@ -123,14 +85,14 @@ in
         js = "jj st";
 
         fnix = "nix-shell --run fish";
-        nano = "micro";
-        ls = "ls -l --color";
+	nano ="micro";
+	ls="ls -l --color";		
       }
     ];
 
     plugins = map (n: {
       name = n;
-      src = sources.${n};
+      src  = sources.${n};
     }) [
       "fish-fzf"
       "fish-foreign-env"
@@ -148,6 +110,7 @@ in
     nix-direnv.enable = true;
   };
 
+
   services.ssh-agent.enable = true;
 
   # Ensure ~/.ssh and ~/.gnupg exist with secure perms
@@ -156,10 +119,11 @@ in
     chmod 700 "$HOME/.ssh" "$HOME/.gnupg"
   '';
 
+
   programs.nix-index = {
-    enable = true;
-    enableFishIntegration = true;
-  };
+  	enable = true;
+  	enableFishIntegration = true;
+  };  	
 
   programs.gh = {
     enable = true;
@@ -181,8 +145,8 @@ in
     extraConfig = {
       branch.autosetuprebase = "always";
       color.ui = true;
-      core.askPass = ""; # use terminal prompt
-      credential.helper = "store"; # consider libsecret/gnome-keyring for better security
+      core.askPass = "";            # use terminal prompt
+      credential.helper = "store";  # consider libsecret/gnome-keyring for better security
       github.user = "alxdolphin";
       push.default = "tracking";
       init.defaultBranch = "main";
