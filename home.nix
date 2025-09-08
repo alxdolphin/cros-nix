@@ -23,7 +23,7 @@ in {
       fd
       ripgrep
       tailscale
-      code-server
+	  code-cursor-fhs
       cursor-cli
       nerd-fonts.jetbrains-mono
       xdg-utils xdg-user-dirs
