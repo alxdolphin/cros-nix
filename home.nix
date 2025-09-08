@@ -9,7 +9,7 @@ in {
     stateVersion  = "25.05";
 
     packages = with pkgs; [
-      nixgl.nixGLMesa
+      nixgl.auto.nixGLDefault
       git gh
       direnv
       niv
@@ -23,11 +23,9 @@ in {
       fd
       ripgrep
       tailscale
-      code-cursor
+      code-cursor-fhs
       nerd-fonts.jetbrains-mono
       xdg-utils xdg-user-dirs
-      mesa-demos
-      vulkan-tools
     ];
 
     # Add ~/.nix-profile/bin and ~/.local/bin to PATH
