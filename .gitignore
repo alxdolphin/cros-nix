@@ -7,6 +7,6 @@ result
 # Nix shells
 .direnv/
 .envrc
-
+cros-container-guest-tools/
 # Backup files
 *~
