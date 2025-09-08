@@ -22,7 +22,7 @@ in {
       docker-compose docker-buildx docker-color-output docker-credential-gcr
       fd
       ripgrep
-	  tailscale
+      tailscale
       code-cursor
       nerd-fonts.jetbrains-mono
       xdg-utils xdg-user-dirs
@@ -46,21 +46,6 @@ in {
   };
 
 
-  hardware.graphics.enable = true;
-
-  virtualisation.docker = {
-    enable = true;
-    enableOnBoot = true;
-    autoPrune = {
-      enable = true;
-      dates = "weekly";
-    };
-  };
-
-
-  services.xserver.enable = lib.mkDefault false;
-  services.tailscale.enable = true;
-
   # Crostini: ensure garcon picks up Nix env
   xdg.enable = true;
   xdg.configFile."systemd/user/cros-garcon.service.d/override.conf".text = ''
@@ -71,8 +56,6 @@ in {
 
   # Start/refresh user services on switch
   systemd.user.startServices = "sd-switch";
-
-  programs.home-manager.enable = true;
 
   # ---- Fish shell (plugins, aliases, fzf integration) ----
   programs.fish = {
@@ -103,14 +86,9 @@ in {
         js = "jj st";
 
         fnix = "nix-shell --run fish";
-		nano ="micro";
-		ls="ls -al --color";
-		
+	nano ="micro";
+	ls="ls -l --color";		
       }
-      (lib.mkIf pkgs.stdenv.isLinux {
-        cbcp  = "wl-copy";
-        cbcp = "wl-paste";
-      })
     ];
 
     plugins = map (n: {
@@ -134,13 +112,6 @@ in {
   };
 
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
-    };
-  };
   services.ssh-agent.enable = true;
 
   # Ensure ~/.ssh and ~/.gnupg exist with secure perms

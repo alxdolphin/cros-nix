@@ -47,7 +47,7 @@
     file which tree bat fd ripgrep # QoL tools
   ];
 
-  hardware.graphics.enable = true;   # unified switch (NixOS ≥ 24.11)
+#  hardware.graphics.enable = true;   # unified switch (NixOS ≥ 24.11)
 
   # Don’t start a full X server; ChromeOS/sommelier handles display forwarding.
   services.xserver.enable = lib.mkDefault false;
