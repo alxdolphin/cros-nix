@@ -23,7 +23,7 @@ in {
       fd
       ripgrep
       tailscale
-	  code-cursor-fhs
+      code-cursor
       cursor-cli
       nerd-fonts.jetbrains-mono
       xdg-utils xdg-user-dirs
@@ -41,6 +41,8 @@ in {
       XDG_DATA_DIRS =
         "$HOME/.nix-profile/share:$HOME/.local/share:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share";
       EDITOR = "micro";
+	  GDK_BACKEND = "wayland";
+	  VK_ICD_FILENAMES = "/usr/local/share/vulkan/icd.d/virtio_icd.i686.json:/usr/share/vulkan/icd.d/virtio_icd.json"
     };
   };
 
@@ -52,6 +54,10 @@ in {
     Environment=PATH=%h/.nix-profile/bin:/usr/local/sbin:/usr/local/bin:/usr/local/games:/usr/sbin:/usr/bin:/usr/games:/sbin:/bin
     Environment=XDG_DATA_DIRS=%h/.nix-profile/share:%h/.local/share:%h/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
   '';
+
+  xdg.desktopEntries.garcon_host_browser = { name = "Host Browser (ChromeOS)"; noDisplay = true; exec = "/usr/bin/garcon-url-handler %u"; terminal = false; type = "Application"; mimeType = [ "text/html" "x-scheme-handler/http" "x-scheme-handler/https" "x-scheme-handler/about" "x-scheme-handler/unknown" "x-scheme-handler/cursor" ]; };
+  xdg.mimeApps = { enable = true; defaultApplications = { "text/html" = [ "garcon_host_browser.desktop" ]; "x-scheme-handler/http" = [ "garcon_host_browser.desktop" ]; "x-scheme-handler/https" = [ "garcon_host_browser.desktop" ]; "x-scheme-handler/about" = [ "garcon_host_browser.desktop" ]; "x-scheme-handler/unknown" = [ "garcon_host_browser.desktop" ]; "x-scheme-handler/cursor" = [ "garcon_host_browser.desktop" ]; }; };
+
 
   # Start/refresh user services on switch
   systemd.user.startServices = "sd-switch";
