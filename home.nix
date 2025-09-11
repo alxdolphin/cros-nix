@@ -42,7 +42,7 @@ in {
         "$HOME/.nix-profile/share:$HOME/.local/share:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share";
       EDITOR = "micro";
 	  GDK_BACKEND = "wayland";
-	  VK_ICD_FILENAMES = "/usr/local/share/vulkan/icd.d/virtio_icd.i686.json:/usr/share/vulkan/icd.d/virtio_icd.json"
+	  VK_ICD_FILENAMES = "/usr/local/share/vulkan/icd.d/virtio_icd.i686.json:/usr/share/vulkan/icd.d/virtio_icd.json";
     };
   };
 
